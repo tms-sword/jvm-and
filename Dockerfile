@@ -1,4 +1,5 @@
 FROM adoptopenjdk:16-jre-hotspot
+LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
