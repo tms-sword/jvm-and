@@ -22,4 +22,4 @@ jobs:
           docker buildx build \
             --push \
             --platform linux/arm64,linux/amd64 \
-            -t ghcr.io/tms-war/jvm-and:latest .
+            -t ghcr.io/${{ github.repository }}:latest .
