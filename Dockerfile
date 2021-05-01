@@ -1,5 +1,15 @@
-FROM adoptopenjdk:16-jre-hotspot
-LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
+FROM ubuntu:20.04 as builder
+
+RUN set -eux; \
+    apt update && apt install -y \
+    libjpeg-dev libpng-dev libtiff-dev libgif-dev; \
+    \
+    curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
+    tar xvzf libwebp-1.2.0.tar.gz ; \
+    cd libwebp-1.2.0 ; \
+    ./configure ; \
+    make; \
+    sudo make install;
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
@@ -12,9 +22,18 @@ RUN set -eux; \
             ;; \
         *) \
             echo だめ; \
+            exit 1; \
             ;; \
     esac;
 
-RUN chmod +x /usr/local/bin/dumb-init
+FROM adoptopenjdk:16-jre-hotspot
+LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 
+COPY --from=builder /usr/local/lib/* /usr/local/lib/
+
+RUN apt update && apt install -y \
+    libjpeg-dev libpng-dev libtiff-dev libgif-dev \
+    iputils-ping
+
+RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
