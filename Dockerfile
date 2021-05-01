@@ -10,7 +10,7 @@ RUN apt update && apt install -y \
     cd libwebp-1.2.0 ; \
     ./configure ; \
     make; \
-    sudo make install;
+    make install;
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
