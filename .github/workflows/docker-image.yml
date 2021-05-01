@@ -16,10 +16,15 @@ jobs:
       - name: Login DockerHub
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
+      - name: init
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes; \
+          docker buildx create --name multiarch --driver docker-container --use; \
+          docker buildx inspect --bootstrap;
       - name: ビルド
         run: |
           docker buildx build \
             --push \
+            --no-cache \
             --platform linux/arm64,linux/amd64 \
             -t ghcr.io/${{ github.repository }}:latest .
