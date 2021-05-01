@@ -2,7 +2,7 @@ FROM ubuntu:20.04 as builder
 
 RUN set -eux; \
     apt update && apt install -y \
-    build-essential \
+    build-essential curl \
     libjpeg-dev libpng-dev libtiff-dev libgif-dev; \
     \
     curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
