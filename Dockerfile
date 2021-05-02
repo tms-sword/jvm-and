@@ -31,6 +31,9 @@ FROM adoptopenjdk:16-jre-hotspot
 LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 
 COPY --from=builder /usr/local/bin/* /usr/local/bin/
+COPY --from=builder /usr/local/lib/* /usr/local/lib/
+COPY --from=builder /usr/local/include/webp /usr/local/include/webp
+ENV LD_LIBRARY_PATH=/usr/local/lib/
 
 RUN apt update && apt install -y \
     libjpeg-dev libpng-dev libtiff-dev libgif-dev \
