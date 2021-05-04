@@ -41,3 +41,4 @@ RUN apt update && apt install -y \
 
 RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+STOPSIGNAL SIGINT
