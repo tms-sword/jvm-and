@@ -1,3 +1,4 @@
+FROM itzg/rcon-cli:latest as rcon-build
 FROM adoptopenjdk:16-jre-hotspot as builder
 
 RUN apt update && apt install -y \
@@ -33,6 +34,7 @@ LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 COPY --from=builder /usr/local/bin/* /usr/local/bin/
 COPY --from=builder /usr/local/lib/* /usr/local/lib/
 COPY --from=builder /usr/local/include/webp /usr/local/include/webp
+COPY --from=rcon-build /rcon-cli /rcon-cli
 ENV LD_LIBRARY_PATH=/usr/local/lib/
 
 RUN apt update && apt install -y \
@@ -40,5 +42,5 @@ RUN apt update && apt install -y \
     iputils-ping
 
 RUN chmod +x /usr/local/bin/dumb-init
+RUN chmod +x /rcon-cli
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
-STOPSIGNAL SIGINT
