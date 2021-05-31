@@ -6,9 +6,9 @@ RUN apt update && apt install -y \
     libjpeg-dev libpng-dev libtiff-dev libgif-dev mercurial; \
     \
     set -eux; \
-    curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
-    tar xvzf libwebp-1.2.0.tar.gz ; \
-    cd libwebp-1.2.0 ; \
+    curl -Lo libwebp.tar.gz https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
+    tar xvzf libwebp.tar.gz ; \
+    cd libwebp ; \
     ./configure ; \
     make; \
     make install;
