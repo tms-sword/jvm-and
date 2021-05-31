@@ -1,9 +1,9 @@
 FROM itzg/rcon-cli:latest as rcon-build
 FROM adoptopenjdk:16-jre-hotspot as webp-lib-build
 
-RUN set -eux; \
-    apt update && apt install -y \
-    libjpeg-dev libpng-dev libtiff-dev libgif-dev; \
+RUN apt update && apt install -y \
+    build-essential curl \
+    libjpeg-dev libpng-dev libtiff-dev libgif-dev mercurial; \
     \
     set -eux; \
     curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
@@ -11,7 +11,7 @@ RUN set -eux; \
     cd libwebp-1.2.0 ; \
     ./configure ; \
     make; \
-    sudo make install;
+    make install;
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
