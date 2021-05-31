@@ -1,14 +1,14 @@
 FROM itzg/rcon-cli:latest as rcon-build
-FROM adoptopenjdk:16-jre-hotspot as builder
+FROM adoptopenjdk:16-jre-hotspot as webp-lib-build
 
 RUN apt update && apt install -y \
     build-essential curl \
     libjpeg-dev libpng-dev libtiff-dev libgif-dev mercurial; \
     \
     set -eux; \
-    curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
-    tar xvzf libwebp-1.2.0.tar.gz ; \
-    cd libwebp-1.2.0 ; \
+    curl -Lo libwebp.tar.gz https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
+    tar xvzf libwebp.tar.gz ; \
+    cd libwebp ; \
     ./configure ; \
     make; \
     make install;
@@ -31,16 +31,15 @@ RUN set -eux; \
 FROM adoptopenjdk:16-jre-hotspot
 LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 
-COPY --from=builder /usr/local/bin/* /usr/local/bin/
-COPY --from=builder /usr/local/lib/* /usr/local/lib/
-COPY --from=builder /usr/local/include/webp /usr/local/include/webp
-COPY --from=rcon-build /rcon-cli /rcon-cli
+COPY --from=webp-lib-build --chmod=755 /usr/local/bin/* /usr/local/bin/
+COPY --from=webp-lib-build --chmod=755 /usr/local/lib/* /usr/local/lib/
+COPY --from=webp-lib-build --chmod=755 /usr/local/include/webp /usr/local/include/webp
+COPY --from=rcon-build --chmod=755 /rcon-cli /rcon-cli
 ENV LD_LIBRARY_PATH=/usr/local/lib/
 
 RUN apt update && apt install -y \
     libjpeg-dev libpng-dev libtiff-dev libgif-dev \
     iputils-ping
 
-RUN chmod +x /usr/local/bin/dumb-init
-RUN chmod +x /rcon-cli
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+STOPSIGNAL 2
