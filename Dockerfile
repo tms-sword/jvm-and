@@ -16,8 +16,7 @@ RUN set -eux; \
             echo だめ; \
             exit 1; \
             ;; \
-    esac; \
-    cp ./rcon-cli /rcon-cli
+    esac;
 
 RUN apt update && apt install -y \
     build-essential curl \
