@@ -1,17 +1,4 @@
 FROM adoptopenjdk:16-jre-hotspot as webp-lib-build
-
-RUN apt update && apt install -y \
-    build-essential curl \
-    libjpeg-dev libpng-dev libtiff-dev libgif-dev mercurial; \
-    \
-    set -eux; \
-    curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
-    tar xvzf libwebp-1.2.0.tar.gz ; \
-    cd libwebp-1.2.0 ; \
-    ./configure ; \
-    make; \
-    make install;
-
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
     case "${ARCH}" in \
@@ -29,8 +16,21 @@ RUN set -eux; \
             echo だめ; \
             exit 1; \
             ;; \
-    esac;
-RUN mv ./rcon-cli /rcon-cli
+    esac; \
+    cp ./rcon-cli /rcon-cli
+
+RUN apt update && apt install -y \
+    build-essential curl \
+    libjpeg-dev libpng-dev libtiff-dev libgif-dev mercurial; \
+    \
+    set -eux; \
+    curl -LO https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.0.tar.gz ; \
+    tar xvzf libwebp-1.2.0.tar.gz ; \
+    cd libwebp-1.2.0 ; \
+    ./configure ; \
+    make; \
+    make install;
+
 
 FROM adoptopenjdk:16-jre-hotspot
 LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
