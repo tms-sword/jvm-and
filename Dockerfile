@@ -1,4 +1,3 @@
-FROM itzg/rcon-cli:latest as rcon-build
 FROM adoptopenjdk:16-jre-hotspot as webp-lib-build
 
 RUN apt update && apt install -y \
@@ -18,15 +17,20 @@ RUN set -eux; \
     case "${ARCH}" in \
         amd64|x86_64) \
             curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64; \
+            curl -LO https://github.com/itzg/rcon-cli/releases/download/1.4.8/rcon-cli_1.4.8_linux_amd64.tar.gz; \
+            tar -zxvf rcon-cli_1.4.8_linux_amd64.tar.gz; \
             ;; \
         aarch64|arm64) \
             curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_aarch64; \
+            curl -LO https://github.com/itzg/rcon-cli/releases/download/1.4.8/rcon-cli_1.4.8_linux_arm64.tar.gz; \
+            tar -zxvf rcon-cli_1.4.8_linux_arm64.tar.gz; \
             ;; \
         *) \
             echo だめ; \
             exit 1; \
             ;; \
     esac;
+RUN mv ./rcon-cli /rcon-cli
 
 FROM adoptopenjdk:16-jre-hotspot
 LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
@@ -34,7 +38,8 @@ LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
 COPY --from=webp-lib-build --chmod=755 /usr/local/bin/* /usr/local/bin/
 COPY --from=webp-lib-build --chmod=755 /usr/local/lib/* /usr/local/lib/
 COPY --from=webp-lib-build --chmod=755 /usr/local/include/webp /usr/local/include/webp
-COPY --from=rcon-build --chmod=755 /rcon-cli /rcon-cli
+COPY --from=webp-lib-build --chmod=755 /rcon-cli /rcon-cli
+
 ENV LD_LIBRARY_PATH=/usr/local/lib/
 
 RUN apt update && apt install -y \
