@@ -32,7 +32,7 @@ RUN set -eux; \
 
 
 FROM adoptopenjdk:16-jre-hotspot
-LABEL org.opencontainers.image.source = "https://github.com/tms-war/jvm-and"
+LABEL org.opencontainers.image.source = "https://github.com/tmswar/jvm-and"
 
 COPY --from=webp-lib-build --chmod=755 /usr/local/bin/* /usr/local/bin/
 COPY --from=webp-lib-build --chmod=755 /usr/local/lib/* /usr/local/lib/
