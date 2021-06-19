@@ -15,7 +15,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Login DockerHub
         run: |
-          echo ${{ secrets.DOCKER_ORG_TOKEN0 }} | docker login -u ${{ secrets.DOCKER_ORG_USER }} --password-stdin
+          echo ${{ secrets.DOCKER_ORG_TOKEN0 }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: init
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes; \
