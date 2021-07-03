@@ -25,7 +25,6 @@ RUN set -eux; \
 FROM adoptopenjdk:8-jre-hotspot
 LABEL org.opencontainers.image.source = "https://github.com/tmswar/jvm-and"
 
-COPY --from=webp-lib-build --chmod=755 /usr/local/include/webp /usr/local/include/webp
 COPY --from=webp-lib-build --chmod=755 /rcon-cli /rcon-cli
 
 ENV LD_LIBRARY_PATH=/usr/local/lib/
