@@ -21,14 +21,6 @@ jobs:
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes; \
           docker buildx create --name multiarch --driver docker-container --use; \
           docker buildx inspect --bootstrap;
-      - name: ビルド
-        run: |
-          docker buildx build \
-            --push \
-            --no-cache \
-            --platform linux/arm64,linux/amd64 \
-            -t ${{ github.repository }}:latest .
-
       - name: ビルド-8
         run: |
           docker buildx build \
@@ -37,3 +29,10 @@ jobs:
             --platform linux/arm64,linux/amd64 \
             -f 8.Dockerfile \
             -t ${{ github.repository }}8:latest .
+      - name: ビルド
+        run: |
+          docker buildx build \
+            --push \
+            --no-cache \
+            --platform linux/arm64,linux/amd64 \
+            -t ${{ github.repository }}:latest .
