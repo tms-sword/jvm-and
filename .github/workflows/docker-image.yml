@@ -28,3 +28,12 @@ jobs:
             --no-cache \
             --platform linux/arm64,linux/amd64 \
             -t ${{ github.repository }}:latest .
+
+      - name: ビルド-8
+        run: |
+          docker buildx build \
+            --push \
+            --no-cache \
+            --platform linux/arm64,linux/amd64 \
+            -f 8.Dockerfile \
+            -t 8${{ github.repository }}:latest .
